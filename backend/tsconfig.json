@@ -8,6 +8,15 @@
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["api/*"]
+    }
+  },
+  "include": ["api/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

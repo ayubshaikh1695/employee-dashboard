@@ -32,3 +32,5 @@ app.use('/api/action', updateEmployeeStatus);
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
+export default app;
