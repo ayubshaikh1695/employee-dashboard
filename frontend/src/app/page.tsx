@@ -7,6 +7,7 @@ import CreateEmployee from '@/components/CreateEmployee/CreateEmployee';
 import EmployeeList from '@/components/EmployeeList/EmployeeList';
 import { Employee } from '@/types/Employee';
 import Spinner from '@/components/Spinner/Spinner';
+import { EMPLOYEE_API_URL } from '@/constants/endpoints';
 
 export default function Home(): JSX.Element {
   const { employees, setEmployees } = useEmployeeContext();
@@ -18,7 +19,7 @@ export default function Home(): JSX.Element {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get<Employee[]>('http://localhost:5000/api/employees');
+        const response = await axios.get<Employee[]>(EMPLOYEE_API_URL);
         if (response.data.length === 0) {
           setError('No employees found');
         } else {
@@ -38,7 +39,7 @@ export default function Home(): JSX.Element {
   const refreshEmployeeList = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<Employee[]>('http://localhost:5000/api/employees');
+      const response = await axios.get<Employee[]>(EMPLOYEE_API_URL);
       if (response.data.length === 0) {
         setError('No employees found');
       } else {
@@ -59,7 +60,7 @@ export default function Home(): JSX.Element {
 
   const handleDeleteEmployee = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/employees/${id}`);
+      await axios.delete(`${EMPLOYEE_API_URL}/${id}`);
       refreshEmployeeList();
     } catch (error) {
       console.error('Error deleting employee:', error);

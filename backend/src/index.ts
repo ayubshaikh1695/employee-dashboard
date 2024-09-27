@@ -3,9 +3,12 @@ import cors from 'cors'; // Import the cors middleware
 import connectDB from './database';
 import employeeRoutes from './routes/employeeRoutes';
 import { updateEmployeeStatus } from './controller/employeeController';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 // Connect to MongoDB
 connectDB();

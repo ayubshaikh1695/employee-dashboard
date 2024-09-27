@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { CreateEmployeeProps } from './CreateEmployee.type';
+import { EMPLOYEE_API_URL } from '@/constants/endpoints';
 
 const CreateEmployee: React.FC<CreateEmployeeProps> = ({ onEmployeeCreated }) => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,8 @@ const CreateEmployee: React.FC<CreateEmployeeProps> = ({ onEmployeeCreated }) =>
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/api/employees', { ...rest, salary: numericSalary });
+      await axios.post(EMPLOYEE_API_URL, { ...rest, salary: numericSalary });
+
       setSuccessMessage('Employee created successfully.');
       setFormData({ name: '', position: '', department: '', salary: '', joiningDate: '' });
       onEmployeeCreated();

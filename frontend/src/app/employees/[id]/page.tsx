@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 import Spinner from '@/components/Spinner/Spinner';
 import { Employee } from '@/types/Employee';
+import { ACTION_API_URL, CALLBACK_API_URL, EMPLOYEE_API_URL } from '@/constants/endpoints';
 
 const EmployeeDetails: FC = () => {
   const { id } = useParams();
@@ -23,7 +24,7 @@ const EmployeeDetails: FC = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get<Employee>(`http://localhost:5000/api/employees/${id}`);
+        const response = await axios.get<Employee>(`${EMPLOYEE_API_URL}/${id}`);
         setEmployee(response.data);
         setFormData({
           name: response.data.name,
@@ -51,9 +52,9 @@ const EmployeeDetails: FC = () => {
 
   const triggerAction = async () => {
     try {
-      await axios.post('http://localhost:5000/api/action', {
+      await axios.post(ACTION_API_URL, {
         id,
-        callbackURL: 'http://localhost:3000/api/callback',
+        callbackURL: CALLBACK_API_URL,
       });
       alert('Action triggered, waiting for callback...');
     } catch (error) {
@@ -76,7 +77,7 @@ const EmployeeDetails: FC = () => {
         status: employee?.status || '',
       };
 
-      const response = await axios.put(`http://localhost:5000/api/employees/${id}`, updatedEmployee);
+      const response = await axios.put(`${EMPLOYEE_API_URL}/${id}`, updatedEmployee);
 
       setEmployee(response.data);
       setIsEditing(false);
