@@ -1,12 +1,13 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 import Spinner from '@/components/Spinner/Spinner';
 import { Employee } from '@/types/Employee';
 import { ACTION_API_URL, CALLBACK_API_URL, EMPLOYEE_API_URL } from '@/constants/endpoints';
+import { toast } from 'react-hot-toast';
 
 const EmployeeDetails: FC = () => {
   const { id } = useParams();
@@ -52,13 +53,20 @@ const EmployeeDetails: FC = () => {
 
   const triggerAction = async () => {
     try {
-      await axios.post(ACTION_API_URL, {
+      const response = await axios.post(ACTION_API_URL, {
         id,
-        callbackURL: CALLBACK_API_URL,
+        callbackUrl: CALLBACK_API_URL,
       });
-      alert('Action triggered, waiting for callback...');
-    } catch (error) {
-      console.error('Error triggering action', error);
+      toast.success(response?.data?.message || 'Action triggered, waiting for callback...', {
+        duration: 3000,
+      });
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
+      console.error('Error triggering action', axiosError);
+      toast.error(
+        (axiosError?.response?.data as { message?: string })?.message || 'Failed to trigger action. Please try again.',
+        { duration: 3000 },
+      );
     }
   };
 
@@ -81,9 +89,15 @@ const EmployeeDetails: FC = () => {
 
       setEmployee(response.data);
       setIsEditing(false);
+      toast.success('Employee details updated successfully', {
+        duration: 3000,
+      });
     } catch (err) {
       setError('Error updating employee details');
       console.error('Error updating employee details:', err);
+      toast.error('Failed to update employee details. Please try again.', {
+        duration: 3000,
+      });
     }
   };
 

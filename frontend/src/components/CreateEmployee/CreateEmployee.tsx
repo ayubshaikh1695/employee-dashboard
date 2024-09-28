@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { CreateEmployeeProps } from './CreateEmployee.type';
 import { EMPLOYEE_API_URL } from '@/constants/endpoints';
+import { toast } from 'react-hot-toast';
 
 const CreateEmployee: React.FC<CreateEmployeeProps> = ({ onEmployeeCreated }) => {
   const [formData, setFormData] = useState({
@@ -11,9 +12,8 @@ const CreateEmployee: React.FC<CreateEmployeeProps> = ({ onEmployeeCreated }) =>
     salary: '',
     joiningDate: '',
   });
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === 'salary' && !/^\d*\.?\d*$/.test(value)) {
@@ -28,7 +28,7 @@ const CreateEmployee: React.FC<CreateEmployeeProps> = ({ onEmployeeCreated }) =>
     const numericSalary = parseFloat(salary);
 
     if (numericSalary < 0) {
-      setError('Salary cannot be negative.');
+      toast.error('Salary cannot be negative.');
       return;
     }
 
@@ -37,12 +37,12 @@ const CreateEmployee: React.FC<CreateEmployeeProps> = ({ onEmployeeCreated }) =>
     try {
       await axios.post(EMPLOYEE_API_URL, { ...rest, salary: numericSalary });
 
-      setSuccessMessage('Employee created successfully.');
+      toast.success('Employee created successfully.');
       setFormData({ name: '', position: '', department: '', salary: '', joiningDate: '' });
       onEmployeeCreated();
     } catch (error) {
       console.error('Error creating employee:', error);
-      setError('Error creating employee.');
+      toast.error('Error creating employee.');
     } finally {
       setLoading(false);
     }
@@ -51,8 +51,6 @@ const CreateEmployee: React.FC<CreateEmployeeProps> = ({ onEmployeeCreated }) =>
   return (
     <div className="max-w-full mx-auto p-4 bg-white rounded-lg shadow-md my-6">
       <h2 className="text-xl font-semibold mb-4 text-left">Create Employee</h2>
-      {error && <div className="text-red-500 mb-2">{error}</div>}
-      {successMessage && <div className="text-green-500 mb-2">{successMessage}</div>}
       <form onSubmit={handleSubmit} className="flex flex-wrap gap-4">
         <div className="flex-1 min-w-[120px]">
           <label className="block mb-1">Name:</label>

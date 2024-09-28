@@ -8,6 +8,7 @@ import EmployeeList from '@/components/EmployeeList/EmployeeList';
 import { Employee } from '@/types/Employee';
 import Spinner from '@/components/Spinner/Spinner';
 import { EMPLOYEE_API_URL } from '@/constants/endpoints';
+import { toast } from 'react-hot-toast';
 
 export default function Home(): JSX.Element {
   const { employees, setEmployees } = useEmployeeContext();
@@ -48,6 +49,7 @@ export default function Home(): JSX.Element {
       }
     } catch (err) {
       setError('Error fetching employees');
+      toast.error('Error fetching employees');
       console.error('Error fetching employees:', err);
     } finally {
       setLoading(false);
@@ -62,8 +64,10 @@ export default function Home(): JSX.Element {
     try {
       await axios.delete(`${EMPLOYEE_API_URL}/${id}`);
       refreshEmployeeList();
+      toast.success('Employee deleted successfully');
     } catch (error) {
       console.error('Error deleting employee:', error);
+      toast.error('Error deleting employee');
     }
   };
 
